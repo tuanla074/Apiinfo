@@ -22,6 +22,12 @@ public class UserInfoController {
         return ResponseEntity.ok(userInfoList);
     }
 
+    @PostMapping
+    public ResponseEntity<UserInfo> addUserInfo(@RequestBody UserInfo userInfo) {
+        UserInfo savedUserInfo = userInfoService.addUserInfo(userInfo);
+        return ResponseEntity.ok(savedUserInfo);
+    }
+
     // GET user_info by ID
     @GetMapping("/{id}")
     public ResponseEntity<UserInfo> getUserInfoById(@PathVariable Long id) {

@@ -90,4 +90,19 @@ public class UserInfoService {
 
         return userInfo;
     }
+
+    // Add new user_info
+    public UserInfo addUserInfo(UserInfo userInfo) {
+        // Save to the database
+        UserInfo savedUserInfo = userInfoRepo.save(userInfo);
+
+        // Invalidate the "all users" cache since the list has changed
+        redisTemplate.delete(ALL_USER_INFO_CACHE_KEY);
+
+        // Optionally cache the newly created user (with TTL of 30 seconds)
+        String cacheKey = USER_INFO_CACHE_PREFIX + savedUserInfo.getId();
+        redisTemplate.opsForValue().set(cacheKey, savedUserInfo, 30, TimeUnit.SECONDS);
+
+        return savedUserInfo;
+    }
 }
