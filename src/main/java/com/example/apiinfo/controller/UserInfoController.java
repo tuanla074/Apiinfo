@@ -1,40 +1,38 @@
 package com.example.apiinfo.controller;
 
 import com.example.apiinfo.model.UserInfo;
-import com.example.apiinfo.repo.UserInfoRepo;
+import com.example.apiinfo.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-        import java.util.List;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user-info")
 public class UserInfoController {
 
     @Autowired
-    private UserInfoRepo userInfoRepository;
+    private UserInfoService userInfoService; // Use the service instead of the repository
 
     // GET all user_info records
     @GetMapping
     public ResponseEntity<List<UserInfo>> getAllUserInfo() {
-        List<UserInfo> userInfoList = userInfoRepository.findAll();
+        List<UserInfo> userInfoList = userInfoService.getAllUserInfo();
         return ResponseEntity.ok(userInfoList);
     }
 
     // GET user_info by ID
     @GetMapping("/{id}")
     public ResponseEntity<UserInfo> getUserInfoById(@PathVariable Long id) {
-        return userInfoRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        UserInfo userInfo = userInfoService.getUserInfoById(id);
+        return ResponseEntity.ok(userInfo);
     }
 
     // GET user_info by userId
     @GetMapping("/user/{userId}")
     public ResponseEntity<UserInfo> getUserInfoByUserId(@PathVariable Long userId) {
-        return userInfoRepository.findByUserId(userId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        UserInfo userInfo = userInfoService.getUserInfoByUserId(userId);
+        return ResponseEntity.ok(userInfo);
     }
 }
