@@ -91,15 +91,18 @@ public class UserInfoService {
         return userInfo;
     }
 
-    // Add new user_info
+    @Autowired
+    private ElasticSearchService elasticSearchService;
+
     public UserInfo addUserInfo(UserInfo userInfo) {
-        // Save to the database
+        // Save to PostgreSQL
         UserInfo savedUserInfo = userInfoRepo.save(userInfo);
 
-        // Invalidate the "all users" cache since the list has changed
-        redisTemplate.delete(ALL_USER_INFO_CACHE_KEY);
+        // Save to Elasticsearch
+        elasticSearchService.saveUserInfo(savedUserInfo);
 
-        // Optionally cache the newly created user (with TTL of 30 seconds)
+        // Cache logic
+        redisTemplate.delete(ALL_USER_INFO_CACHE_KEY);
         String cacheKey = USER_INFO_CACHE_PREFIX + savedUserInfo.getId();
         redisTemplate.opsForValue().set(cacheKey, savedUserInfo, 30, TimeUnit.SECONDS);
 
