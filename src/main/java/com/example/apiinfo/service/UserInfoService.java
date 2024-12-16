@@ -98,9 +98,6 @@ public class UserInfoService {
         // Save to PostgreSQL
         UserInfo savedUserInfo = userInfoRepo.save(userInfo);
 
-        // Save to Elasticsearch
-        elasticSearchService.saveUserInfo(savedUserInfo);
-
         // Cache logic
         redisTemplate.delete(ALL_USER_INFO_CACHE_KEY);
         String cacheKey = USER_INFO_CACHE_PREFIX + savedUserInfo.getId();
