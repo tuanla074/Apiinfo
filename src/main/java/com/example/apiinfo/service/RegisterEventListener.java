@@ -47,7 +47,7 @@ public class RegisterEventListener {
             // Set the fields
             userInfo.setAge(age);
             userInfo.setAddress(address);
-            userInfo.setUserId(Long.getLong(userId));
+            userInfo.setUserId(Long.valueOf(userId));
 
             userInfoService.addUserInfo(userInfo);
             elasticSearchService.saveJsonToElasticsearch(userId, elasticSearchJson);
